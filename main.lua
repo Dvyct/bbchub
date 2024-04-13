@@ -1,78 +1,47 @@
-local Decimals = 4
-local Clock = os.clock()
-local ValueText = "Value Is Now :"
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/cerberus.lua"))()
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/dohmai/Tokyo/main/Libraries/UI"))({
-	cheatname = "Title Here", -- watermark text
-	gamename = "Title Here", -- watermark text
-})
+local window = Library.new("Window") -- Args(<string> Name, <boolean?> ConstrainToScreen)
 
-library:init()
+window:LockScreenBoundaries(true) -- Args(<boolean> ConstrainToScreen)
 
-local Window1  = library.NewWindow({
-	title = "Papers Please Cheats", -- Mainwindow Text
-	size = UDim2.new(0, 510, 0.6, 6
-	)})
+local tab = window:Tab("Tab") -- Args(<string> Name, <string?> TabImage)
 
-local Tab1 = Window1:AddTab("Main")
-local SettingsTab = library:CreateSettingsTab(Window1)
+local section = tab:Section("Section") -- Args(<string> Name)
 
---Tab1:SetText("Teleports")
+local title = section:Title("Title") -- Args(<string> Name)
+title:ChangeText("Title") -- Args(<String> NewText)
 
-local Section1 = Tab1:AddSection("Main Features", 1)
+local label = section:Label("Label") -- Args(<String> LabelText, <Number?> TextSize, <Color3?> TextColor)
+label:ChangeText("Label") -- Args(<String> NewText, <Boolean?> PlayAnimation)
 
-Section1:AddSeparator({
-	enabled = true,
-	text = "Features"
-})
+local toggle = section:Toggle("Toggle", function(bool)
+   print("Toggle is: "..tostring(bool))
+end) -- Args(<String> Name, <Function> Callback)
+toggle:Set(false) -- Args(<Boolean> ToggleState, <Function?> Callback)
 
-Section1:AddButton({
-	enabled = true,
-	text = "Button1",
-	tooltip = "tooltip1",
-	confirm = true,
-	risky = false,
-	callback = function()
-		-- Function to check if an object is an interact/proximity object
-		local function isInteractObject(object)
-			return object:IsA("ProximityPrompt") or object:IsA("ClickDetector")
-		end
+section:Button("Button", function()
+   print("Pressed button!")
+end) -- Args(<String> Name, <Function> Callback)
 
-		-- Function to set the hold duration to 0 for interact/proximity objects
-		local function setHoldDurationToZero(object)
-			if object:IsA("ProximityPrompt") then
-				object.HoldDuration = 0 
-			end
-		end
+local dropdown = section:Dropdown("Dropdown") -- Args(<String> Name)
+dropdown:ChangeText("Dropdown") -- Args(<String> NewText)
+dropdown:Toggle("Toggle") -- Dropdowns and searchbars can go inside dropdowns
 
-		-- Recursive function to iterate through all descendants of an object
-		local function iterateDescendants(parent)
-			for _, child in ipairs(parent:GetChildren()) do
-				if isInteractObject(child) then
-					local success, error = pcall(setHoldDurationToZero, child)
-					if not success then
-						warn("Error setting HoldDuration to 0:", error)
-					end
-				end
-				iterateDescendants(child)
-			end
-		end
+section:Slider("Slider", function(val)
+   print("Slider Value is: "..val)
+end) -- Args(<String> Name, <Function> Callback, <Number?> MaximumValue, <Number?> MinimumValue)
 
-		-- Start the iteration from the workspace
-		local success, error = pcall(iterateDescendants, game.Workspace)
-		if not success then
-			warn("Error iterating through descendants:", error)
-		end
-	end
-})
-local Time = (string.format("%."..tostring(Decimals).."f", os.clock() - Clock))
-library:SendNotification(("Loaded In "..tostring(Time)), 6)
+local searchBar = section:SearchBar("Search...") -- Args(<String> PlaceholderText)
+searchBar:Toggle("Toggle") -- Searchbars and dropdowns can go inside searchbars
 
---[[
-    --Window1:SetOpen(false)
-    makefolder("Title Here")
-    library:SetTheme(Default)
-    library:GetConfig(Default)
-    library:LoadConfig(Default)
-    library:SaveConfig(Default)
-]]
+section:Keybind("Keybind", function()
+   print("Keybind pressed!")
+end) -- Args(<String> Name, <Function> Callback, <String> DefaultKey)
+
+section:TextBox("Textbox", function(txt)
+   print("Textbox string is: "..txt)
+end) -- Args(<String> Name, <Function> Callback)
+
+section:ColorWheel("ColorWheel", function(color)
+   print("ColorWheel color is: "..tostring(color))
+end) -- Args(<String> Name, <Function> Callback)
